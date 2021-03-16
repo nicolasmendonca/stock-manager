@@ -9,6 +9,7 @@ import {
 	Text,
 	Link as ChakraLink,
 } from '@chakra-ui/react';
+import { useAuth } from '../../context/Auth';
 
 interface ILink {
 	route: string;
@@ -28,7 +29,7 @@ const NavLinks: React.FC<INavLinksProps> = ({ links }) => {
 								color: 'gray.200',
 							}}
 							colorScheme="purple"
-							fontWeight="light"
+							fontWeight="semibold"
 						>
 							{link.displayName}
 						</ChakraLink>
@@ -40,6 +41,7 @@ const NavLinks: React.FC<INavLinksProps> = ({ links }) => {
 };
 
 export const Sidebar = () => {
+	const { user } = useAuth();
 	return (
 		<Box as="nav" bg="purple.400" w="xs">
 			<Flex
@@ -58,11 +60,28 @@ export const Sidebar = () => {
 							{ displayName: 'Produccion', route: '/produccion' },
 						]}
 					/>
-					<Text color="white" fontWeight="bold">
-						Nicolas Mendonca
+					<Text color="white" fontWeight="light" letterSpacing="wide">
+						{user?.displayName}
 					</Text>
 				</Box>
 			</Flex>
 		</Box>
+	);
+};
+
+export const SidebarWrapper: React.FC = ({ children }) => {
+	return (
+		<Flex maxW="full">
+			<Sidebar />
+			{children}
+		</Flex>
+	);
+};
+
+export const SidebarWrapperWithPadding: React.FC = ({ children }) => {
+	return (
+		<SidebarWrapper>
+			<Box p="12">{children}</Box>
+		</SidebarWrapper>
 	);
 };

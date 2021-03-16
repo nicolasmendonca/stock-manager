@@ -13,18 +13,32 @@ enum Status {
 	Error = 'ERROR',
 }
 
-interface AuthContextValue {
+interface IAuthContextValue {
 	user: MaybeAuthUser;
 	setUser: React.Dispatch<MaybeAuthUser>;
 	login: () => Promise<firebase.auth.UserCredential>;
 }
 
-const AuthContext = React.createContext<AuthContextValue | undefined>(
+/** For testing purposes */
+interface IAuthContextProps {
+	user?: Partial<MaybeAuthUser>;
+	setUser?: React.Dispatch<MaybeAuthUser>;
+	login?: () => Promise<any>;
+	checkLoginOnInit?: boolean;
+}
+
+const AuthContext = React.createContext<IAuthContextValue | undefined>(
 	undefined
 );
 
-export const AuthProvider: React.FC = ({ children }) => {
-	const [status, setStatus] = React.useState<Status>(Status.Pending);
+export const AuthProvider: React.FC<IAuthContextProps> = ({
+	children,
+	checkLoginOnInit = true,
+	...props
+}) => {
+	const [status, setStatus] = React.useState<Status>(
+		checkLoginOnInit ? Status.Pending : Status.Success
+	);
 	const [user, setUser] = React.useState<MaybeAuthUser>(
 		() => firebaseAuth?.currentUser || null
 	);
@@ -39,23 +53,25 @@ export const AuthProvider: React.FC = ({ children }) => {
 			user,
 			setUser,
 			login,
+			...props,
 		}),
 		[user]
 	);
 
 	React.useEffect(() => {
-		setStatus(Status.Pending);
-		const unsubscribe = firebaseAuth.onAuthStateChanged((firebaseUser) => {
-			setStatus(Status.Success);
-			setUser(firebaseUser);
-			if (firebaseUser === null) {
-				router.push('/');
-			} else {
-				router.push('/productos');
-			}
-		});
-
-		return () => unsubscribe();
+		if (checkLoginOnInit) {
+			setStatus(Status.Pending);
+			const unsubscribe = firebaseAuth.onAuthStateChanged((firebaseUser) => {
+				setStatus(Status.Success);
+				setUser(firebaseUser);
+				if (firebaseUser === null) {
+					router.push('/');
+				} else {
+					router.push('/productos');
+				}
+			});
+			return () => unsubscribe();
+		}
 	}, []);
 
 	return status === Status.Pending ? (
