@@ -7,7 +7,7 @@ import {
 interface ButtonProps extends ChakraButtonProps {}
 
 const Button: React.FC<ButtonProps> = (props) => {
-	return <ChakraButton {...props} onCli />;
+	return <ChakraButton {...props} />;
 };
 
 export const MainButton: React.FC<ButtonProps> = (props) => {
