@@ -3,7 +3,7 @@ import React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 import { Box, Flex, Container } from '@chakra-ui/react';
 
-import Button, { MainButton } from '../components/Button';
+import Button, { MainButton } from './index';
 
 export default {
 	title: 'Button',
