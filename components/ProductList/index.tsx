@@ -1,6 +1,6 @@
 import React from 'react';
 import Button, { MainButton } from '../Button';
-import { Box, Input, Select, SimpleGrid, Table, Tbody, Td, Text, Th, Thead, Tr, Wrap } from '@chakra-ui/react';
+import { Box, Editable, EditableInput, EditablePreview, Input, Select, Table, Tbody, Td, Th, Thead, Tr, Wrap } from '@chakra-ui/react';
 import { Products, Categories } from '../../services/stockService';
 
 interface IProductListProps {
@@ -69,8 +69,15 @@ export const ProductList = React.forwardRef<IProductListImperativeHandle, IProdu
 											-
 										</Button>
 									</Td>
-									<Td textAlign="center">
-										<Text>{product.qtyAvailable}</Text>
+									<Td textAlign="center" w="6em">
+										<Editable
+											w="4em"
+											value={product.qtyAvailable?.toString() ?? ''}
+											onChange={(qtyAvailable) => onProductAvailableQtyChange(product.id, +qtyAvailable)}
+										>
+											<EditablePreview />
+											<EditableInput />
+										</Editable>
 									</Td>
 									<Td textAlign="center">
 										<Button size="sm" onClick={() => onProductAvailableQtyChange(product.id, product.qtyAvailable + 1)}>

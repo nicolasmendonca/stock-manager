@@ -1,12 +1,12 @@
 import { firebase } from '../firebase';
-import { Box, Heading } from '@chakra-ui/layout';
+import { Box, Heading, Stack } from '@chakra-ui/layout';
 import Head from 'next/head';
 import React from 'react';
 import { withFirestore, FirestoreCollection } from 'react-firestore';
 import { ProductList, IProductListImperativeHandle } from '../components/ProductList';
 import { SidebarWrapperWithPadding } from '../components/Sidebar';
-import VisuallyHidden from '@chakra-ui/visually-hidden';
 import { IProductFirestoreModel } from '../services/stockService';
+import { Skeleton } from '@chakra-ui/skeleton';
 
 interface IProductsProps {
 	firestore: firebase.firestore.Firestore;
@@ -17,7 +17,8 @@ const Productos: React.FC<IProductsProps> = ({ firestore }) => {
 	const getTimestamp = () => firebase.firestore.FieldValue.serverTimestamp();
 	const productAvailableQtyChangedHandler = (productId: string, qtyAvailable: number) =>
 		getProductRef(productId).update({ qtyAvailable, updatedAt: getTimestamp() });
-	const productCategoryChangedHandler = (productId: string, categoryId: string) => getProductRef(productId).update({ categoryId, updatedAt: getTimestamp() });
+	const productCategoryChangedHandler = (productId: string, categoryDisplayName: string) =>
+		getProductRef(productId).update({ categoryDisplayName, updatedAt: getTimestamp() });
 	const productDisplayNameChangedHandler = (productId: string, displayName: string) =>
 		getProductRef(productId).update({ displayName, updatedAt: getTimestamp() });
 	const productDeleteHandler = (productId: string) => getProductRef(productId).delete();
@@ -44,19 +45,25 @@ const Productos: React.FC<IProductsProps> = ({ firestore }) => {
 			</Head>
 			<Box as="main">
 				<SidebarWrapperWithPadding>
-					<Heading as="h1" size="3xl" mb="3em">
+					<Heading as="h1" size="3xl" mb="1em">
 						Productos
 					</Heading>
 					<FirestoreCollection
 						path="/categories"
-						render={({ isLoadingCategories, data: categoriesCollection }) => {
+						render={({ isLoading: isLoadingCategories, data: categoriesCollection }) => {
 							return (
 								<FirestoreCollection
 									path="/products"
 									sort="createdAt:asc"
-									render={({ isLoadingProducts, data: productsCollection }) => {
+									render={({ isLoading: isLoadingProducts, data: productsCollection }) => {
 										if (isLoadingCategories || isLoadingProducts) {
-											return <VisuallyHidden as="p">Loading</VisuallyHidden>;
+											return (
+												<Stack spacing={8} p="2em">
+													<Skeleton height="30px" />
+													<Skeleton height="30px" />
+													<Skeleton height="30px" />
+												</Stack>
+											);
 										}
 										return (
 											<ProductList
