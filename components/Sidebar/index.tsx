@@ -1,14 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import {
-	Box,
-	Flex,
-	List,
-	ListItem,
-	Spacer,
-	Text,
-	Link as ChakraLink,
-} from '@chakra-ui/react';
+import { Box, Flex, List, ListItem, Spacer, Text, Link as ChakraLink } from '@chakra-ui/react';
 import { useAuth } from '../../context/Auth';
 
 interface ILink {
@@ -44,13 +36,7 @@ export const Sidebar = () => {
 	const { user } = useAuth();
 	return (
 		<Box as="nav" bg="purple.400" w="xs">
-			<Flex
-				flexDirection="column"
-				alignItems="flex-start"
-				justifyContent="flex-end"
-				h="100vh"
-				p="6"
-			>
+			<Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-end" h="100vh" p="6">
 				<Spacer />
 				<Box py="16">
 					<NavLinks
@@ -81,7 +67,9 @@ export const SidebarWrapper: React.FC = ({ children }) => {
 export const SidebarWrapperWithPadding: React.FC = ({ children }) => {
 	return (
 		<SidebarWrapper>
-			<Box p="12">{children}</Box>
+			<Box w="full" maxW="container.xl" p="12">
+				{children}
+			</Box>
 		</SidebarWrapper>
 	);
 };

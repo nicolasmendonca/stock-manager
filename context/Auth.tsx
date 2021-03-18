@@ -56,14 +56,14 @@ export const AuthProvider: React.FC<IAuthContextProps> = ({
 			...props,
 		}),
 		[user]
-	);
+	) as IAuthContextValue;
 
 	React.useEffect(() => {
 		if (checkLoginOnInit) {
 			setStatus(Status.Pending);
 			const unsubscribe = firebaseAuth.onAuthStateChanged((firebaseUser) => {
-				setStatus(Status.Success);
 				setUser(firebaseUser);
+				setStatus(Status.Success);
 				if (firebaseUser === null) {
 					router.push('/');
 				} else {
