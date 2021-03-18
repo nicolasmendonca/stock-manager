@@ -1,4 +1,4 @@
-import { firestoreClient } from '../firebase';
+import { firebase, firestoreClient } from '../firebase';
 
 export interface ICategoryFirestoreModel {
 	displayName: string;
@@ -10,8 +10,30 @@ export interface IProductFirestoreModel {
 	qtyAvailable: number;
 }
 
-type CategoryFirestoreResponse = ICategoryFirestoreModel[];
-type ProductFirestoreResponse = IProductFirestoreModel[];
+export interface IProductOrderDetails {
+	productId: string;
+	productDisplayName: string;
+	categoryId: string;
+	categoryDisplayName: string;
+	qty: number;
+	notes?: string;
+}
+
+export interface ICustomerDetails {
+	fullName: string;
+	contactNumber?: string;
+	profileUrl?: string;
+}
+
+export interface IOrderFirestoreModel {
+	id: string;
+	products: IProductOrderDetails[];
+	customerDetails: ICustomerDetails;
+	dueDate: firebase.firestore.Timestamp;
+	deliveryAddress: string;
+	createdAt: firebase.firestore.Timestamp;
+	updatedAt: firebase.firestore.Timestamp;
+}
 
 export interface IProduct {
 	id: string;

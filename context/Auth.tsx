@@ -27,21 +27,11 @@ interface IAuthContextProps {
 	checkLoginOnInit?: boolean;
 }
 
-const AuthContext = React.createContext<IAuthContextValue | undefined>(
-	undefined
-);
+const AuthContext = React.createContext<IAuthContextValue | undefined>(undefined);
 
-export const AuthProvider: React.FC<IAuthContextProps> = ({
-	children,
-	checkLoginOnInit = true,
-	...props
-}) => {
-	const [status, setStatus] = React.useState<Status>(
-		checkLoginOnInit ? Status.Pending : Status.Success
-	);
-	const [user, setUser] = React.useState<MaybeAuthUser>(
-		() => firebaseAuth?.currentUser || null
-	);
+export const AuthProvider: React.FC<IAuthContextProps> = ({ children, checkLoginOnInit = true, ...props }) => {
+	const [status, setStatus] = React.useState<Status>(checkLoginOnInit ? Status.Pending : Status.Success);
+	const [user, setUser] = React.useState<MaybeAuthUser>(() => firebaseAuth?.currentUser || null);
 	const router = useRouter();
 	const login = React.useCallback(async () => {
 		const provider = new firebase.auth.GoogleAuthProvider();
@@ -67,18 +57,16 @@ export const AuthProvider: React.FC<IAuthContextProps> = ({
 				if (firebaseUser === null) {
 					router.push('/');
 				} else {
-					router.push('/productos');
+					if (router.pathname === '/') {
+						router.push('/productos');
+					}
 				}
 			});
 			return () => unsubscribe();
 		}
 	}, []);
 
-	return status === Status.Pending ? (
-		<FullPageLoader />
-	) : (
-		<AuthContext.Provider value={values}>{children}</AuthContext.Provider>
-	);
+	return status === Status.Pending ? <FullPageLoader /> : <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
