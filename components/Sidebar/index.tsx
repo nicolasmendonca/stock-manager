@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Box, Flex, List, ListItem, Spacer, Text, Link as ChakraLink } from '@chakra-ui/react';
 import { useAuth } from '../../context/Auth';
+import { useRouter } from 'next/router';
 
 interface ILink {
 	route: string;
@@ -11,6 +12,7 @@ interface INavLinksProps {
 	links: ILink[];
 }
 const NavLinks: React.FC<INavLinksProps> = ({ links }) => {
+	const route = useRouter();
 	return (
 		<List py="20">
 			{links.map((link) => (
@@ -22,6 +24,7 @@ const NavLinks: React.FC<INavLinksProps> = ({ links }) => {
 							}}
 							colorScheme="purple"
 							fontWeight="semibold"
+							color={link.route === route.pathname ? 'purple.900' : undefined}
 						>
 							{link.displayName}
 						</ChakraLink>
@@ -42,7 +45,7 @@ export const Sidebar = () => {
 					<NavLinks
 						links={[
 							{ displayName: 'Productos', route: '/productos' },
-							{ displayName: 'Encargos', route: '/encargos' },
+							{ displayName: 'Pedidos', route: '/pedidos' },
 							{ displayName: 'Produccion', route: '/produccion' },
 						]}
 					/>

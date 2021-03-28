@@ -43,7 +43,7 @@ export const ProductList = React.forwardRef<IProductListImperativeHandle, IProdu
 						{products.map((product, index) => {
 							return (
 								<Tr key={product.id}>
-									<Td w="60%" textAlign="center">
+									<Td textAlign="center">
 										<Input
 											ref={products.length - 1 === index ? lastProductNameInputRef : undefined}
 											variant="filled"
@@ -53,7 +53,7 @@ export const ProductList = React.forwardRef<IProductListImperativeHandle, IProdu
 											isInvalid={product.displayName === ''}
 										/>
 									</Td>
-									<Td w="40%">
+									<Td>
 										<Select value={product.categoryDisplayName} onChange={(e) => onProductCategoryChange(product.id, e.target.value)}>
 											{categories.map((category) => {
 												return (
@@ -69,9 +69,8 @@ export const ProductList = React.forwardRef<IProductListImperativeHandle, IProdu
 											-
 										</Button>
 									</Td>
-									<Td textAlign="center" w="6em">
+									<Td textAlign="center">
 										<Editable
-											w="4em"
 											value={product.qtyAvailable?.toString() ?? ''}
 											onChange={(qtyAvailable) => onProductAvailableQtyChange(product.id, +qtyAvailable)}
 										>

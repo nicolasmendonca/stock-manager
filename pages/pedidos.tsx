@@ -1,17 +1,14 @@
 import { Box, Heading } from '@chakra-ui/layout';
 import Head from 'next/head';
 import React from 'react';
-import { firebase } from '../firebase';
-import { FirestoreCollection, withFirestore } from 'react-firestore';
-import { OrderList } from '../components/OrderList';
+import { FirestoreCollection } from 'react-firestore';
 import { SidebarWrapperWithPadding } from '../components/Sidebar';
-import { IOrderFirestoreModel } from '../services/stockService';
 import { Spinner } from '@chakra-ui/spinner';
+import { OrderDetailsWithDate } from '../components/OrderDetails';
+import { Button } from '@chakra-ui/button';
+import { MainButton } from '../components/Button';
 
-interface IPedidosProps {
-	firestore: firebase.firestore.Firestore;
-}
-export const Pedidos: React.FC<IPedidosProps> = ({ firestore }) => {
+export const Pedidos: React.FC = () => {
 	return (
 		<>
 			<Head>
@@ -26,7 +23,18 @@ export const Pedidos: React.FC<IPedidosProps> = ({ firestore }) => {
 					<FirestoreCollection
 						path="/orders"
 						orderBy="dueDate:asc"
-						render={({ isLoading, data: orders }) => (isLoading ? <Spinner /> : <OrderList orders={orders} />)}
+						render={({ isLoading, data: orders }) =>
+							isLoading ? (
+								<Spinner />
+							) : (
+								<Box>
+									<OrderDetailsWithDate orders={orders} />
+									<MainButton size="sm" m="4">
+										Crear pedido
+									</MainButton>
+								</Box>
+							)
+						}
 					/>
 				</SidebarWrapperWithPadding>
 			</Box>
@@ -34,4 +42,4 @@ export const Pedidos: React.FC<IPedidosProps> = ({ firestore }) => {
 	);
 };
 
-export default withFirestore(Pedidos);
+export default Pedidos;
